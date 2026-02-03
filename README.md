@@ -1,3 +1,4 @@
+
 # AI Blog-to-Social Content Generator
 
 A Flask-based web application that transforms blog posts into platform-specific social media content using AI.
@@ -64,3 +65,6 @@ ai-blog-to-social/
 2. Click "Generate Social Media Content"
 3. View the AI-generated content for LinkedIn, Twitter/X, and Instagram
 4. Copy and use the generated content on your social platforms
+
+# blogtosocial
+>>>>>>> 237695485f6f2839764780a6a756bcbd8cab8be4
