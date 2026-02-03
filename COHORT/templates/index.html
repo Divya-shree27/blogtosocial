@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Social Chronicles</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Google Fonts for Regency Aesthetics -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Lady Whistledown's</div>
+            <h1>Social Papers</h1>
+            <p>Dearest Reader, entrust your prose to us, and we shall transform it for the Ton's viewing pleasure.</p>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <textarea id="blogInput"
+                    placeholder="My dear friend, compose your scandalous thoughts here..."></textarea>
+                <button id="generateBtn" onclick="generateContent()">
+                    <span id="btnText">Publish to the Ton</span>
+                    <span id="loader" class="loader" style="display: none;"></span>
+                </button>
+            </section>
+
+            <section id="resultsSection" class="results-section hidden">
+                <div class="platform-card linkedin">
+                    <div class="card-header">
+                        <span class="icon">💼</span>
+                        <h2>LinkedIn Post</h2>
+                    </div>
+                    <div class="card-content" id="linkedinContent"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('linkedinContent')">Copy</button>
+                </div>
+
+                <div class="platform-card twitter">
+                    <div class="card-header">
+                        <span class="icon">🐦</span>
+                        <h2>Twitter Thread</h2>
+                    </div>
+                    <div class="card-content" id="twitterContent"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('twitterContent')">Copy</button>
+                </div>
+
+                <div class="platform-card instagram">
+                    <div class="card-header">
+                        <span class="icon">📸</span>
+                        <h2>Instagram Caption</h2>
+                    </div>
+                    <div class="card-content" id="instagramContent"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('instagramContent')">Copy</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>Powered by AI • Built with Flask</p>
+    </footer>
+
+    <script>
+        async function generateContent() {
+            const content = document.getElementById('blogInput').value;
+            const btn = document.getElementById('generateBtn');
+            const btnText = document.getElementById('btnText');
+            const loader = document.getElementById('loader');
+            const resultsSection = document.getElementById('resultsSection');
+
+            if (!content.trim()) {
+                alert("Please paste some content first!");
+                return;
+            }
+
+            // Loading state
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            loader.style.display = 'inline-block';
+            resultsSection.classList.add('hidden');
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ content: content })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    document.getElementById('linkedinContent').innerText = data.linkedin;
+                    document.getElementById('twitterContent').innerText = data.twitter;
+                    document.getElementById('instagramContent').innerText = data.instagram;
+                    resultsSection.classList.remove('hidden');
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while generating content.');
+            } finally {
+                // Reset state
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                loader.style.display = 'none';
+            }
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+
+</html>
