@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Blog-to-Social Content Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 AI Blog-to-Social Content Generator</h1>
+            <p>Transform your blog posts into engaging social media content instantly</p>
+        </header>
+
+        <!-- Flash messages for user feedback -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main>
+            <div class="input-section">
+                <h2>📝 Paste Your Blog Content</h2>
+                <form action="{{ url_for('generate') }}" method="POST">
+                    <div class="form-group">
+                        <label for="blog_text">Blog Post Content:</label>
+                        <textarea 
+                            id="blog_text" 
+                            name="blog_text" 
+                            placeholder="Paste your blog post content here... (minimum 50 characters)"
+                            required
+                            minlength="50"
+                        ></textarea>
+                        <div class="char-counter">
+                            <span id="char-count">0</span> characters
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="generate-btn">
+                        ✨ Generate Social Media Content
+                    </button>
+                </form>
+            </div>
+
+            <div class="features-section">
+                <h2>🎯 What You'll Get</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">💼</div>
+                        <h3>LinkedIn Post</h3>
+                        <p>Professional, engaging content perfect for LinkedIn's business audience</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🐦</div>
+                        <h3>Twitter/X Thread</h3>
+                        <p>3-tweet thread optimized for Twitter's format and character limits</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <h3>Instagram Caption</h3>
+                        <p>Visual-friendly caption with emojis and relevant hashtags</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by AI • Built with Flask • Made for Content Creators</p>
+        </footer>
+    </div>
+
+    <script>
+        // Character counter for textarea
+        const textarea = document.getElementById('blog_text');
+        const charCount = document.getElementById('char-count');
+        
+        textarea.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = count;
+            
+            // Change color based on minimum requirement
+            if (count < 50) {
+                charCount.style.color = '#e74c3c';
+            } else {
+                charCount.style.color = '#27ae60';
+            }
+        });
+
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.remove();
+                }, 300);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

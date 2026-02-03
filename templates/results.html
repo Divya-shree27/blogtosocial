@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Social Media Content - AI Blog-to-Social</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎉 Your Social Media Content is Ready!</h1>
+            <p>AI-generated content tailored for each platform</p>
+        </header>
+
+        <main>
+            <!-- Navigation back to home -->
+            <div class="navigation">
+                <a href="{{ url_for('index') }}" class="back-btn">← Generate New Content</a>
+            </div>
+
+            <!-- Original blog content preview -->
+            <div class="original-content">
+                <h2>📄 Original Blog Content</h2>
+                <div class="content-preview">
+                    {{ original_text[:200] }}{% if original_text|length > 200 %}...{% endif %}
+                </div>
+            </div>
+
+            <!-- Generated social media content -->
+            <div class="results-grid">
+                <!-- LinkedIn Post -->
+                <div class="result-card linkedin">
+                    <div class="platform-header">
+                        <div class="platform-icon">💼</div>
+                        <h3>LinkedIn Post</h3>
+                        <button class="copy-btn" onclick="copyToClipboard('linkedin-content')">📋 Copy</button>
+                    </div>
+                    <div class="content-box">
+                        <pre id="linkedin-content">{{ linkedin_post }}</pre>
+                    </div>
+                    <div class="platform-tips">
+                        <strong>Tips:</strong> Professional tone, business-focused hashtags, ideal for networking
+                    </div>
+                </div>
+
+                <!-- Twitter/X Thread -->
+                <div class="result-card twitter">
+                    <div class="platform-header">
+                        <div class="platform-icon">🐦</div>
+                        <h3>Twitter/X Thread</h3>
+                        <button class="copy-btn" onclick="copyToClipboard('twitter-content')">📋 Copy</button>
+                    </div>
+                    <div class="content-box">
+                        <pre id="twitter-content">{{ twitter_thread }}</pre>
+                    </div>
+                    <div class="platform-tips">
+                        <strong>Tips:</strong> Post as a thread, engage with replies, use trending hashtags
+                    </div>
+                </div>
+
+                <!-- Instagram Caption -->
+                <div class="result-card instagram">
+                    <div class="platform-header">
+                        <div class="platform-icon">📸</div>
+                        <h3>Instagram Caption</h3>
+                        <button class="copy-btn" onclick="copyToClipboard('instagram-content')">📋 Copy</button>
+                    </div>
+                    <div class="content-box">
+                        <pre id="instagram-content">{{ instagram_caption }}</pre>
+                    </div>
+                    <div class="platform-tips">
+                        <strong>Tips:</strong> Add relevant images, use Stories for engagement, post at peak times
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usage instructions -->
+            <div class="usage-instructions">
+                <h2>📋 How to Use Your Generated Content</h2>
+                <div class="instructions-grid">
+                    <div class="instruction-item">
+                        <strong>1. Copy Content</strong>
+                        <p>Click the copy button for each platform to copy the generated content</p>
+                    </div>
+                    <div class="instruction-item">
+                        <strong>2. Customize</strong>
+                        <p>Feel free to edit and personalize the content to match your voice</p>
+                    </div>
+                    <div class="instruction-item">
+                        <strong>3. Post & Engage</strong>
+                        <p>Share on your platforms and engage with your audience's responses</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate more content -->
+            <div class="generate-more">
+                <a href="{{ url_for('index') }}" class="generate-btn">
+                    ✨ Generate More Content
+                </a>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by AI • Built with Flask • Made for Content Creators</p>
+        </footer>
+    </div>
+
+    <!-- Copy notification -->
+    <div id="copy-notification" class="copy-notification">
+        Content copied to clipboard! 📋
+    </div>
+
+    <script>
+        // Copy to clipboard functionality
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            // Use the modern Clipboard API
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showCopyNotification();
+                }).catch(function(err) {
+                    // Fallback for older browsers
+                    fallbackCopyTextToClipboard(text);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(text);
+            }
+        }
+
+        // Fallback copy method for older browsers
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopyNotification();
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // Show copy notification
+        function showCopyNotification() {
+            const notification = document.getElementById('copy-notification');
+            notification.classList.add('show');
+            
+            setTimeout(function() {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        // Add smooth scroll behavior for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
